@@ -7,5 +7,10 @@ import com.cognizant.ormlearn.model.Country;
 
 @Repository
 public interface CountryRepository extends JpaRepository<Country, String> {
+  @Query("select c from Country c where c.name like %?1%")
+	public List<Country> findCountryNameContain(String name);
+
+	@Query("select c from Country c where c.name like %?1%")
+	public List<Country> findCountryNameAndSort(String name, Sort sort);
 
 }
