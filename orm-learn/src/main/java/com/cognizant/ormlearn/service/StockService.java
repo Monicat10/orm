@@ -1,20 +1,17 @@
 package com.cognizant.ormlearn.service;
 
-import java.util.Date;
 import java.util.List;
 
 import com.cognizant.ormlearn.model.Stock;
+import com.cognizant.ormlearn.service.exp.StockNotFoundException;
 
 public interface StockService {
-	List<Stock> getAllStockDetails();
 
-	List<Stock> findStockUsingCode(String code);
+	public List<Stock> findByCodeAndDate() throws StockNotFoundException;
 
-	List<Stock> findFBStockInSep19(String code, Date startDate, Date endDate);
+	public List<Stock> findByCodeAndPrice() throws StockNotFoundException;
 
-	List<Stock> findGoogleStockGreaterThan1250(String code, double price);
+	public List<Stock> findByHighestVolume() throws StockNotFoundException;
 
-	List<Stock> findTop3VolumeStock();
-
-	List<Stock> findLowest3NetflixStocks(String code);
+	public List<Stock> findByLowestVolumeNflx() throws StockNotFoundException;
 }
