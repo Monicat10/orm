@@ -63,7 +63,7 @@ public class OrmLearnApplication {
 	CommandLineRunner addCountry() {
 		return args -> {
 			logger.info("START...");
-			countryService.addCountry(new Country("AB", "Unkownplace"));
+			countryService.addCountry(new Country("AB", "Arab"));
 			logger.info("END...");
 		};
 	}
