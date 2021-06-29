@@ -1,20 +1,22 @@
-package com.cognizant.ormlearn.service;
+package com.nishk.ormlearn.services;
 
-import java.util.Date;
 import java.util.List;
 
-import com.cognizant.ormlearn.model.Stock;
+import com.nishk.ormlearn.model.Employee;
 
-public interface StockService {
-	List<Stock> getAllStockDetails();
+public interface EmployeeService {
 
-	List<Stock> findStockUsingCode(String code);
+	Employee findEmployee(int id);
+	
+	void removeEmployee(int id);
 
-	List<Stock> findFBStockInSep19(String code, Date startDate, Date endDate);
-
-	List<Stock> findGoogleStockGreaterThan1250(String code, double price);
-
-	List<Stock> findTop3VolumeStock();
-
-	List<Stock> findLowest3NetflixStocks(String code);
+	void saveEmployee(Employee employee);
+	
+	List<Employee> findAllPermanentEmployees();
+	
+	double findAverageSalaryofEmployees();
+	
+	double findAverageSalaryBasedOnDeptId(int id);
+	
+	List<Employee> getAllEmployeesUsingNativeQuery(); 
 }
