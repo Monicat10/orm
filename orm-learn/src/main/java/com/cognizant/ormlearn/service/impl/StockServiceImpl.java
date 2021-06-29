@@ -19,25 +19,39 @@ public class StockServiceImpl implements StockService {
 	@Autowired
 	private StockRepository stockRepository;
 
-	public List<Stock> findByCodeAndDate() {
-		System.out.println("Stocks are:");
-		List<Stock> stockList = stockRepository.stockDetailsOfFacebook("FB", 9);
-		return stockList;
+	@Override
+	public List<Stock> getAllStockDetails() {
+
+		return stockRepository.findAll();
 	}
 
-	public List<Stock> findByCodeAndPrice() {
-		System.out.println("GOOGL Stocks greater than 1250 are:");
-		return stockRepository.stockDetailsOfGoogle("GOOGL", new BigDecimal(1250));
+	@Override
+	public List<Stock> findStockUsingCode(String code) {
+
+		return stockRepository.findStockByCode(code);
 	}
 
-	public List<Stock> findByHighestVolume() {
-		System.out.println("FB Highest Stocks are:");
-		List<Stock> stockList = stockRepository.stockDetailsOfHighestFb("FB");
-		return stockList;
+	@Override
+	public List<Stock> findFBStockInSep19(String code, Date startDate, Date endDate) {
+
+		return stockRepository.fbStockInSep19(code, startDate, endDate);
 	}
 
-	public List<Stock> findByLowestVolumeNflx() {
+	@Override
+	public List<Stock> findGoogleStockGreaterThan1250(String code, double price) {
 
-		return stockRepository.stockDetailsOfLowestNflx("NFLX");
+		return stockRepository.googleStocks(code, price);
+	}
+
+	@Override
+	public List<Stock> findTop3VolumeStock() {
+
+		return stockRepository.topVolume();
+	}
+
+	@Override
+	public List<Stock> findLowest3NetflixStocks(String code) {
+		
+		return stockRepository.lowNetflixStocks(code);
 	}
 }
