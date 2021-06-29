@@ -223,15 +223,18 @@ public class OrmLearnApplication {
 	@Bean
 	CommandLineRunner testAddEmployee() {
 		return args -> {
-			logger.info("START... for Add Employee");
-			Employee.builder().name("Monica").salary(800000.00).permanent(true)
-					.dateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse("1999-11-10")).build();
-			Department department = departmentService.findDepartment(3);
-			Employee employee = Employee.builder().name("siri").salary(700000.00).permanent(false)
-					.dateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse("1990-09-22")).department(department).build();
+			LOGGER.info("START");
+			Employee employee = new Employee();
+			employee.setName("Monica");
+			employee.setSalary(new BigDecimal(4000.0));
+			employee.setPermanent(true);
+			SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
+			employee.setDateOfBirth(ft.parse("1999-11-10"));
+			Department department = departmentService.findDepartment(1);
+			employee.setDepartment(department);
 			employeeService.saveEmployee(employee);
-			logger.info("Employee Details -> {}", employee);
-			logger.info("END... for Add Employee");
+			LOGGER.debug("Employee:{}", employee);
+			LOGGER.info("END");
 		};
 	}
 
