@@ -52,7 +52,7 @@ public class OrmLearnApplication {
 	@Bean
 	CommandLineRunner getAllCountries() {
 		return args -> {
-			logger.info("START...");
+			logger.info("START");
 			List<Country> countries = countryService.getAllCountries();
 			logger.debug("countries = {}", countries);
 			logger.info("END...");
@@ -62,7 +62,7 @@ public class OrmLearnApplication {
 	@Bean
 	CommandLineRunner addCountry() {
 		return args -> {
-			logger.info("START...");
+			logger.info("START");
 			countryService.addCountry(new Country("AB", "Arab"));
 			logger.info("END...");
 		};
@@ -72,7 +72,7 @@ public class OrmLearnApplication {
 	@Bean
 	CommandLineRunner deleteCountryByCode() {
 		return args -> {
-			logger.info("START...");
+			logger.info("START");
 			countryService.deleteCountry("AB");
 			logger.info("END...");
 		};
@@ -113,7 +113,7 @@ public class OrmLearnApplication {
 	@Bean
 	CommandLineRunner findCountryByCode() {
 		return args -> {
-			logger.info("START...");
+			logger.info("START");
 			Country country = countryService.findCountryCode("AB");
 			logger.debug("Country : {}", country);
 			logger.info("END...");
@@ -124,9 +124,9 @@ public class OrmLearnApplication {
 	@Bean
 	CommandLineRunner testGetAllStockDetails() {
 		return args -> {
-			logger.info("START... for getAllStockDetails");
+			logger.info("START");
 			stockService.getAllStockDetails().forEach(c -> logger.info("{}", c));
-			logger.info("END... for getAllStockDetails");
+			logger.info("END");
 		};
 	}
 
@@ -147,7 +147,7 @@ public class OrmLearnApplication {
 					new SimpleDateFormat("yyyy-MM-dd").parse("2019-09-01"),
 					new SimpleDateFormat("yyyy-MM-dd").parse("2019-09-30"));
 			stockInSep19.forEach(c -> logger.info("{}", c));
-			logger.info("END... for findFBStockInSep19");
+			logger.info("END");
 		};
 	}
 
@@ -163,7 +163,7 @@ public class OrmLearnApplication {
 	@Bean
 	CommandLineRunner testFindTop3VolumeStock() {
 		return args -> {
-			logger.info("START... for findTop3VolumeStock");
+			logger.info("START");
 			stockService.findTop3VolumeStock().forEach(c -> logger.info("{}", c));
 			logger.info("END... for findTop3VolumeStock");
 		};
@@ -181,10 +181,10 @@ public class OrmLearnApplication {
 	@Bean
 	CommandLineRunner testFindEmployee() {
 		return args -> {
-			logger.info("START... for Employee");
+			logger.info("START");
 			Employee employee = employeeService.findEmployee(1);
 			logger.info("Employee Details -> {}", employee);
-			logger.info("END... for Employee");
+			logger.info("END");
 		};
 	}
 
