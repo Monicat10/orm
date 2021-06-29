@@ -70,17 +70,7 @@ public class OrmLearnApplication {
 			LOGGER.info("END");
 		};
 	}
-
-	@Bean
-	CommandLineRunner testFindCountryByCode(CountryService countryService) {
-		return args -> {
-			LOGGER.info("START");
-			Country country = countryService.findCountryByCode("CL");
-			LOGGER.debug("Country : {}", country);
-			LOGGER.info("END");
-		};
-	}
-
+	
 	@Bean
 	CommandLineRunner testUpdateCountry(CountryService countryService) {
 		return args -> {
@@ -89,22 +79,14 @@ public class OrmLearnApplication {
 			LOGGER.info("END");
 		};
 	}
-
-	@Bean
-	CommandLineRunner testGetAllMatchingCountries(CountryService countryService) {
-		return args -> {
-			LOGGER.info("START");
-			LOGGER.debug("countries = {}", countryService.getSearchingCountry("ou"));
-			LOGGER.info("END");
-		};
-	}
+	
 	@Bean
 	CommandLineRunner testSortCountry(CountryService countryService) {
 		return args -> {
 			LOGGER.info("Start");
 			try {
 
-				List<Country> countryList = countryService.getSortingCountry("OU");
+				List<Country> countryList = countryService.SortCountry("OU");
 				LOGGER.debug("Countries={}", countryList);
 			} catch (Exception e) {
 				LOGGER.error("message={}", e.getMessage());
@@ -112,6 +94,26 @@ public class OrmLearnApplication {
 			LOGGER.info("End");
 		};
 	}
+	
+	@Bean
+	CommandLineRunner testGetAllMatchingCountries(CountryService countryService) {
+		return args -> {
+			LOGGER.info("START");
+			LOGGER.debug("countries = {}", countryService.SearchCountry("ou"));
+			LOGGER.info("END");
+		};
+	}
+
+	@Bean
+	CommandLineRunner testFindCountryByCode(CountryService countryService) {
+		return args -> {
+			LOGGER.info("START");
+			Country country = countryService.findCountryCode("CL");
+			LOGGER.debug("Country : {}", country);
+			LOGGER.info("END");
+		};
+	}
+	
 	
 	@Bean
 	CommandLineRunner testForFacebookDate(StockService stockService) {
