@@ -1,6 +1,5 @@
 package com.cognizant.ormlearn;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -10,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
+import com.cognizant.ormlearn.custom_exception.CountryNotFoundException;
 import com.cognizant.ormlearn.model.Country;
 import com.cognizant.ormlearn.model.Department;
 import com.cognizant.ormlearn.model.Employee;
@@ -25,52 +26,58 @@ import com.cognizant.ormlearn.service.StockService;
 
 @SpringBootApplication
 public class OrmLearnApplication {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(OrmLearnApplication.class);
+	@Autowired
+	private CountryService countryService;
 
 	@Autowired
-	EmployeeService employeeService;
+	private StockService stockService;
 
 	@Autowired
-	DepartmentService departmentService;
+	private EmployeeService employeeService;
 
 	@Autowired
-	SkillService skillService;
+	private DepartmentService departmentService;
 
-	public static void main(String[] args) {
+	@Autowired
+	private SkillService skillService;
 
-		SpringApplication.run(OrmLearnApplication.class, args);
+	private static final Logger logger = LoggerFactory.getLogger(OrmLearnApplication.class);
+
+	public static void main(String[] args) throws CountryNotFoundException {
+		ApplicationContext context = SpringApplication.run(OrmLearnApplication.class, args);
+		logger.info("inside main");
+
 	}
 
 	@Bean
-	CommandLineRunner testGetAllCountries(CountryService countryService) {
-
+	CommandLineRunner getAllCountries() {
 		return args -> {
-			LOGGER.info("Start");
+			logger.info("START...");
 			List<Country> countries = countryService.getAllCountries();
-			LOGGER.debug("countries={}", countries);
-			LOGGER.info("End");
+			logger.debug("countries = {}", countries);
+			logger.info("END...");
 		};
 	}
 
 	@Bean
-	CommandLineRunner testAddCountry(CountryService countryService) {
+	CommandLineRunner addCountry() {
 		return args -> {
-			LOGGER.info("START");
-			countryService.addCountry(new Country("AB", "Arab"));
-			LOGGER.info("END");
+			logger.info("START...");
+			countryService.addCountry(new Country("AB", "Unkownplace"));
+			logger.info("END...");
 		};
 	}
 
-	@Bean
-	CommandLineRunner testDeleteCountryByCode(CountryService countryService) {
-		return args -> {
-			LOGGER.info("START");
-			countryService.deleteCountry("AB");
-			LOGGER.info("END");
-		};
-	}
 	
+	@Bean
+	CommandLineRunner deleteCountryByCode() {
+		return args -> {
+			logger.info("START...");
+			countryService.deleteCountry("AB");
+			logger.info("END...");
+		};
+	}
+
 	@Bean
 	CommandLineRunner testUpdateCountry(CountryService countryService) {
 		return args -> {
@@ -103,157 +110,213 @@ public class OrmLearnApplication {
 			LOGGER.info("END");
 		};
 	}
+	@Bean
+	CommandLineRunner findCountryByCode() {
+		return args -> {
+			logger.info("START...");
+			Country country = countryService.findCountryCode("AB");
+			logger.debug("Country : {}", country);
+			logger.info("END...");
+		};
+	}
+
+	
+	@Bean
+	CommandLineRunner testGetAllStockDetails() {
+		return args -> {
+			logger.info("START... for getAllStockDetails");
+			stockService.getAllStockDetails().forEach(c -> logger.info("{}", c));
+			logger.info("END... for getAllStockDetails");
+		};
+	}
 
 	@Bean
-	CommandLineRunner testFindCountryByCode(CountryService countryService) {
+	CommandLineRunner testFindStockUsingCode() {
 		return args -> {
-			LOGGER.info("START");
-			Country country = countryService.findCountryCode("CL");
-			LOGGER.debug("Country : {}", country);
-			LOGGER.info("END");
+			logger.info("START... for findStockUsingCode");
+			stockService.findStockUsingCode("GOOGL").forEach(c -> logger.info("{}", c));
+			logger.info("END... for findStockUsingCode");
+		};
+	}
+
+	@Bean
+	CommandLineRunner testFindFBStockInSep19() {
+		return args -> {
+			logger.info("START... for findFBStockInSep19");
+			List<Stock> stockInSep19 = stockService.findFBStockInSep19("FB",
+					new SimpleDateFormat("yyyy-MM-dd").parse("2019-09-01"),
+					new SimpleDateFormat("yyyy-MM-dd").parse("2019-09-30"));
+			stockInSep19.forEach(c -> logger.info("{}", c));
+			logger.info("END... for findFBStockInSep19");
+		};
+	}
+
+	@Bean
+	CommandLineRunner testFindGoogleStockGreaterThan1250() {
+		return args -> {
+			logger.info("START... for findGoogleStockGreaterThan1250");
+			stockService.findGoogleStockGreaterThan1250("GOOGL", 1250).forEach(c -> logger.info("{}", c));
+			logger.info("END... for findGoogleStockGreaterThan1250");
+		};
+	}
+
+	@Bean
+	CommandLineRunner testFindTop3VolumeStock() {
+		return args -> {
+			logger.info("START... for findTop3VolumeStock");
+			stockService.findTop3VolumeStock().forEach(c -> logger.info("{}", c));
+			logger.info("END... for findTop3VolumeStock");
+		};
+	}
+
+	@Bean
+	CommandLineRunner testFindLowest3NetflixStocks() {
+		return args -> {
+			logger.info("START... for findLowest3NetflixStocks");
+			stockService.findLowest3NetflixStocks("NFLX").forEach(c -> logger.info("{}", c));
+			logger.info("END... for findLowest3NetflixStocks");
 		};
 	}
 	
-	
 	@Bean
-	CommandLineRunner testForFacebookDate(StockService stockService) {
+	CommandLineRunner testFindEmployee() {
 		return args -> {
-			LOGGER.info("Start");
-			List<Stock> stockList = stockService.findByCodeAndDate();
-			LOGGER.debug("Stocks={}", stockList);
-			//stockList.forEach(System.out::println);
-			LOGGER.info("End");
-
+			logger.info("START... for Employee");
+			Employee employee = employeeService.findEmployee(1);
+			logger.info("Employee Details -> {}", employee);
+			logger.info("END... for Employee");
 		};
 	}
 
 	@Bean
-	CommandLineRunner testForCodeAndPrice(StockService stockService) {
+	CommandLineRunner testFindDepartment() {
 		return args -> {
-			LOGGER.info("Start");
-			List<Stock> stockList = stockService.findByCodeAndPrice();
-			LOGGER.debug("Stocks={}", stockList);
-			//stockList.forEach(System.out::println);
-			LOGGER.info("End");
+			logger.info("START... for Department");
+			Department department = departmentService.findDepartment(1);
+			logger.info("Department Details -> {}", department);
+			logger.info("END... for Department");
 		};
 	}
 
 	@Bean
-	CommandLineRunner testForStockHighest(StockService stockService) {
+	CommandLineRunner testFindSkill() {
 		return args -> {
-			LOGGER.info("Start");
-			List<Stock> stockList = stockService.findByHighestVolume();
-			LOGGER.debug("Stocks={}", stockList);
-			// stockList.forEach(System.out::println);
-			LOGGER.info("End");
-		};
-	}
-
-	@Bean
-	CommandLineRunner testForStockLowest(StockService stockService) {
-		return args -> {
-			LOGGER.info("Start");
-			List<Stock> stockList = stockService.findByLowestVolumeNflx();
-			LOGGER.debug("Stocks={}", stockList);
-			//stockList.forEach(System.out::println);
-			LOGGER.info("End");
+			logger.info("START... for Skill");
+			Skill skill = skillService.findSkill(2);
+			logger.info("Skill Details -> {}", skill);
+			logger.info("END... for Skill");
 		};
 	}
 
 	@Bean
 	CommandLineRunner testGetEmployee() {
 		return args -> {
-			LOGGER.info("START");
-			Employee employee = employeeService.findEmployee(1);
-			LOGGER.debug("Employee:{}", employee);
-			LOGGER.debug("Department:{}", employee.getDepartment());
-			LOGGER.debug("Skills:{}", employee.getSkillList());
-			LOGGER.info("END");
+			logger.info("START... for Get Employee");
+			Employee employee = employeeService.findEmployee(2);
+			logger.debug("Employee -> {}", employee);
+			logger.debug("Department -> {}", employee.getDepartment());
+			logger.debug("Skills -> {}", employee.getSkillList());
+			logger.info("END... Get Employee");
 		};
 	}
 
 	@Bean
 	CommandLineRunner testAddEmployee() {
 		return args -> {
-			LOGGER.info("START");
-			Employee employee = new Employee();
-			employee.setName("Monica");
-			employee.setSalary(new BigDecimal(4000.0));
-			employee.setPermanent(true);
-			SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
-			employee.setDateOfBirth(ft.parse("1999-11-10"));
-			Department department = departmentService.findDepartment(1);
-			employee.setDepartment(department);
+			logger.info("START... for Add Employee");
+			Employee.builder().name("Monica").salary(800000.00).permanent(true)
+					.dateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse("1999-11-10")).build();
+			Department department = departmentService.findDepartment(3);
+			Employee employee = Employee.builder().name("siri").salary(700000.00).permanent(false)
+					.dateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse("1990-09-22")).department(department).build();
 			employeeService.saveEmployee(employee);
-			LOGGER.debug("Employee:{}", employee);
-			LOGGER.info("END");
+			logger.info("Employee Details -> {}", employee);
+			logger.info("END... for Add Employee");
 		};
 	}
 
 	@Bean
 	CommandLineRunner testUpdateEmployee() {
 		return args -> {
-			LOGGER.info("START");
-			Employee employee = employeeService.findEmployee(3);
-			Department department = departmentService.findDepartment(4);
+			logger.info("START... for Update Employee");
+			Employee employee = employeeService.findEmployee(11);
+			Department department = departmentService.findDepartment(1);
 			employee.setDepartment(department);
 			employeeService.saveEmployee(employee);
-			LOGGER.debug("Employee:{}", employee);
-			LOGGER.info("END");
+			logger.info("Employee Details -> {}", employee);
+			logger.info("END... for Update Employee");
 		};
 	}
 
+	@Bean
+	CommandLineRunner testDeleteEmployee() {
+		return args -> {
+			logger.info("START... for Delete Employee");
+			employeeService.removeEmployee(11);
+			logger.info("END... for Delete Employee");
+		};
+	}
+	
 	@Bean
 	CommandLineRunner testGetDepartment() {
 		return args -> {
-			LOGGER.info("START");
-			Department department = departmentService.findDepartment(4);
-			LOGGER.debug("Department:{}", department);
-			department.getEmployeeList().forEach(employee -> LOGGER.debug("{}", employee));
-			LOGGER.info("END");
+			logger.info("START... for Get Department");
+			Department department = departmentService.findDepartment(1);
+			logger.info("Department -> {}", department);
+			logger.info("Employee List -> {}", department.getEmployeeList());
+			logger.info("END... for Get Department");
 		};
 	}
-
+	
 	@Bean
 	CommandLineRunner testAddSkillToEmployee() {
 		return args -> {
-			LOGGER.info("START... testAddSkillToEmployee");
-			Employee employee = employeeService.findEmployee(2);
+			logger.info("START... for Add Skill To Employee");
+			Employee employee = employeeService.findEmployee(1);
 			Skill skill = skillService.findSkill(3);
 			employee.getSkillList().add(skill);
 			employeeService.saveEmployee(employee);
-			LOGGER.debug("Employee:{}", employee);
-			LOGGER.info("END... testAddSkillToEmployee");
+			logger.info("END... for Add Skill To Employee");
 		};
 	}
 
 	@Bean
 	CommandLineRunner testGetAllPermanentEmployees() {
 		return args -> {
-			LOGGER.info("START");
+			logger.info("START... Permanent Employees");
 			List<Employee> employees = employeeService.findAllPermanentEmployees();
-			LOGGER.debug("Permanent Employees:{}", employees);
-			employees.forEach(employee -> LOGGER.debug("Skills:{}", employee.getSkillList()));
-			LOGGER.info("END");
+			logger.debug("Permanent Employees -> {}", employees);
+			employees.forEach(e -> logger.debug("Skills -> {}", e.getSkillList()));
+			logger.info("END... Permanent Employees");
 		};
 	}
 
 	@Bean
 	CommandLineRunner testGetAverageSalary() {
 		return args -> {
-			LOGGER.info("START");
-			LOGGER.debug("Average Salary: {}", employeeService.findAverageSalaryBasedOnDeptId(2));
-			LOGGER.info("END");
+			logger.info("START... Get Average Salary of Employees");
+			double salary = employeeService.findAverageSalaryofEmployees();
+			logger.info("Average Salary : {}", salary);
+			logger.info("END... Get Average Salary of Employees");
+		};
+	}
+	
+	@Bean
+	CommandLineRunner testGetAverageSalaryBasedOnDeptId() {
+		return args -> {
+			logger.info("START... Get Average Salary based on Dept id");
+			double salary = employeeService.findAverageSalaryBasedOnDeptId(3);
+			logger.info("Average Salary : {}", salary);
+			logger.info("END... Get Average Salary based on Dept id");
 		};
 	}
 
 	@Bean
-	CommandLineRunner testGetAllEmployeesNative() {
+	CommandLineRunner testGetAllEmployeesUsingNativeQuery() {
 		return args -> {
-			LOGGER.info("START");
-			List<Employee> employees = employeeService.getAllEmployeesUsingNativeQuery();
-			employees.forEach(employee -> LOGGER.debug("Employee: {}", employee));
-			LOGGER.info("END");
+			logger.info("START... All Employees Using Native Query");
+			employeeService.getAllEmployeesUsingNativeQuery().forEach(e -> logger.info("Employees -> {}", e));
+			logger.info("END... All Employees Using Native Query");
 		};
 	}
 }
