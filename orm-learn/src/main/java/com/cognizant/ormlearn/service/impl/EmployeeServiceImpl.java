@@ -17,36 +17,47 @@ import com.cognizant.ormlearn.service.EmployeeService;
 public class EmployeeServiceImpl implements EmployeeService {
 	@Autowired
 	private EmployeeRepository employeeRepository;
-
 	
 	@Override
 	public Employee findEmployee(int id) {
-		
+
 		return employeeRepository.findById(id).get();
 	}
 
 	@Override
 	public void saveEmployee(Employee employee) {
-		
-		employeeRepository.save(employee);
-	
 
+		employeeRepository.save(employee);
+	}
+
+	@Override
+	public void removeEmployee(int id) {
+		
+		employeeRepository.deleteById(id);
 	}
 
 	@Override
 	public List<Employee> findAllPermanentEmployees() {
-		return employeeRepository. getAllPermanentEmployees();
+		
+		return employeeRepository.getAllPermanentEmployees();
+	}
+
+	@Override
+	public double findAverageSalaryofEmployees() {
+		
+		return employeeRepository.getAverageSalary();
 	}
 
 	@Override
 	public double findAverageSalaryBasedOnDeptId(int id) {
+		
 		return employeeRepository.getAverageSalaryBasedOnDeptId(id);
 	}
 
 	@Override
 	public List<Employee> getAllEmployeesUsingNativeQuery() {
-		return employeeRepository.getAllEmployeesNativeQuery();
+		
+		return employeeRepository.getAllEmployeesNative();
 	}
-
 
 }
