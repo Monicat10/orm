@@ -1,4 +1,4 @@
-package com.nishk.ormlearn.services;
+package com.cognizant.ormlearn.service;
 
 import java.util.List;
 
